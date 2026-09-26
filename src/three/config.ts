@@ -15,27 +15,29 @@ const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z)
 const desktop: SceneLayout = {
   planet: v(2.05, -0.3, 0),
   planetRadius: 1.72,
-  star: v(-6.6, 3.4, -5.5),
+  star: v(-8.4, 4.5, -5.5),
   starRadius: 0.42,
   keyframes: [
-    [v(0, 0.1, 10), v(0.45, 0, 0)],
+    [v(0, 0.1, 10), v(0.45, -0.35, 0)],
     [v(1.15, -0.05, 6.3), v(1.7, -0.25, 0)],
-    [v(0.4, 0.7, 16.5), v(-1.1, 0.7, -2)],
-    [v(-1.2, 1.5, 31), v(-2.4, 1.3, -3.5)],
+    // Section Distance : planète en haut à droite, étoile hors champ, loin du texte.
+    [v(0.4, 0.7, 16.5), v(-3, -4, -3)],
+    [v(-2, 2, 26), v(-5, -7, -3)],
     [v(0.7, 0.25, 11.5), v(1.1, -0.2, 0)],
   ],
 }
 
 const mobile: SceneLayout = {
   planet: v(0.35, -1.55, 0),
-  planetRadius: 1.22,
-  star: v(-2.3, 4.6, -5.5),
+  planetRadius: 1.05,
+  star: v(-3, 5, -5.5),
   starRadius: 0.36,
   keyframes: [
-    [v(0, 0, 11.5), v(0.1, -0.35, 0)],
+    [v(0, 0, 11.5), v(0.1, 0.35, 0)],
     [v(0.35, -0.95, 7.6), v(0.35, -1.45, 0)],
-    [v(0, 0.6, 19), v(-0.6, 0.9, -2)],
-    [v(-0.8, 1.4, 33), v(-1.1, 1.8, -3.5)],
+    // Mobile : pendant la Distance, planète et étoile sortent du cadre (texte pleine largeur).
+    [v(0, 0.6, 19), v(7, 0.6, -3)],
+    [v(-0.8, 1.4, 33), v(11, 1.4, -3)],
     [v(0.1, -0.1, 12.5), v(0.25, -0.9, 0)],
   ],
 }

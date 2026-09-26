@@ -13,7 +13,7 @@ export function DockNav() {
       className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center"
       style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 14px)' }}
     >
-      <div className="pointer-events-auto max-w-[calc(100vw-32px)] min-[900px]:max-w-none">
+      <div className="pointer-events-auto max-w-[calc(100vw-32px)] [mask-image:linear-gradient(to_right,transparent,black_20px,black_calc(100%-20px),transparent)] min-[900px]:max-w-none min-[900px]:[mask-image:none]">
         <Dock className="items-end gap-3 pb-2.5" magnification={62} distance={120} panelHeight={54}>
           {SECTIONS.map((section) => {
             const Icon = section.icon

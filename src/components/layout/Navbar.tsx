@@ -77,7 +77,7 @@ export function Navbar() {
           </AnimatedBackground>
         </div>
 
-        <p className="label hidden text-[10px] text-muted sm:block">
+        <p className="label hidden text-[10px] text-muted min-[900px]:block">
           <span className="text-dwarf">●</span> Aperçu · v0.1
         </p>
       </nav>

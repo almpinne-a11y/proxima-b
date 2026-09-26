@@ -28,12 +28,15 @@ export type ToolbarExpandableProps = {
   className?: string;
   /** Largeur minimale du panneau ouvert (px). */
   minPanelWidth?: number;
+  /** Adaptation : sens d'ouverture (vers le haut par défaut, vers le bas en haut d'écran). */
+  direction?: 'up' | 'down';
 };
 
 export default function ToolbarExpandable({
   items,
   className,
   minPanelWidth = 0,
+  direction = 'up',
 }: ToolbarExpandableProps) {
   const [active, setActive] = useState<number | null>(null);
   const [contentRef, { height: heightContent }] = useMeasure();
@@ -56,7 +59,12 @@ export default function ToolbarExpandable({
   return (
     <MotionConfig transition={transition}>
       <div className={className} ref={ref}>
-        <div className='h-full w-full rounded-xl border border-line bg-deep/85 backdrop-blur-md'>
+        <div
+          className={cn(
+            'flex h-full w-full rounded-xl border border-line bg-deep/85 backdrop-blur-md',
+            direction === 'down' ? 'flex-col-reverse' : 'flex-col'
+          )}
+        >
           <div className='overflow-hidden'>
             <AnimatePresence initial={false} mode='sync'>
               {isOpen ? (

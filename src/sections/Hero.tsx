@@ -1,6 +1,7 @@
 import { ArrowDown, ArrowRight } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { Sheet } from '@/components/layout/Sheet'
+import { HeroImages } from '@/components/media/HeroImages'
 import { MagneticArea } from '@/components/site/MagneticArea'
 import { RevealText } from '@/components/text/RevealText'
 import { GlowEffect } from '@/components/ui/glow-effect'
@@ -14,76 +15,85 @@ import { cn } from '@/lib/utils'
 /** Ordre de dissolution au scroll (identique pour les deux calques du titre). */
 const STAGGER: Record<string, number> = { eyebrow: 0, title: 1, subtitle: 2, actions: 3, coords: 4, cue: 4 }
 
-const TITLE_CLASS = 'display text-[clamp(3.6rem,13.4vw,14.5rem)] leading-[0.86]'
+// Tailles liées à la largeur ET à la hauteur : rien ne déborde sur les écrans bas.
+const TITLE_CLASS = 'display text-[clamp(2.7rem,min(13.4vw,17vh),14.5rem)] leading-[0.86]'
+const BODY_CLASS = 'text-[clamp(0.95rem,min(1.5vw,2.6vh),1.35rem)] leading-snug'
 
-/** Colonne commune aux deux calques : même mise en page, donc titre superposé au pixel près. */
+/**
+ * Colonne du hero. Elle est rendue deux fois avec exactement la même mise en page :
+ * « base » (contenu réel) et « blend » (seul « Proxima » est visible, en mix-blend-mode: difference,
+ * pour se fondre avec la planète du calque WebGL). Tout est dans le flux : aucun chevauchement possible.
+ */
 function HeroColumn({ mode }: { mode: 'base' | 'blend' }) {
   const revealed = useSite((s) => s.revealed)
   const reduced = useReducedMotion()
   const base = mode === 'base'
+  const hide = !base && 'invisible'
 
   return (
-    <div
-      className="gutter absolute inset-x-0 top-[17vh] flex flex-col items-start gap-6 min-[900px]:top-[21vh]"
-      data-hero-part={base ? 'column' : undefined}
-    >
-      <p className={cn('label text-[10px] text-glow sm:text-[11px]', !base && 'invisible')} data-hero-part="eyebrow">
-        {base && revealed && !reduced ? (
-          <TextScramble as="span" duration={1.1} speed={0.035} characterSet="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·">
-            EXOPLANÈTE · SYSTÈME ALPHA CENTAURI
-          </TextScramble>
-        ) : (
-          'EXOPLANÈTE · SYSTÈME ALPHA CENTAURI'
-        )}
-      </p>
-
-      {base ? (
-        <h1 id="hero-title" className={TITLE_CLASS} data-hero-part="title">
-          {/* « Proxima » est dessiné par le calque en mix-blend-mode ; ici, il reste lisible par les lecteurs d'écran. */}
-          <span className="opacity-0">Proxima</span>{' '}
-          <RevealText
-            as="span"
-            per="word"
-            preset="scale"
-            trigger={revealed}
-            delay={0.55}
-            className="editorial inline-block text-[1.12em] leading-none"
-            effectClassName="text-gradient-dwarf pr-[0.06em]"
-            reducedClassName="text-gradient-dwarf"
-          >
-            b.
-          </RevealText>
-        </h1>
-      ) : (
-        <p aria-hidden="true" className={TITLE_CLASS} data-hero-part="title">
-          <RevealText as="span" per="char" preset="fade-in-blur" trigger={revealed} className="inline-block text-text" speedReveal={0.9}>
-            Proxima
-          </RevealText>{' '}
-          <span className="editorial invisible inline-block text-[1.12em] leading-none">b.</span>
+    <div className="gutter absolute inset-0 flex flex-col pb-[calc(92px+env(safe-area-inset-bottom,0px))] pt-[calc(64px+env(safe-area-inset-top,0px)+clamp(12px,5vh,64px))] min-[900px]:pb-[104px]">
+      <div className="flex min-h-0 flex-1 flex-col items-start justify-start gap-[clamp(10px,2.4vh,26px)] min-[900px]:justify-center">
+        <p className={cn('label text-[10px] text-glow sm:text-[11px]', hide)} data-hero-part="eyebrow">
+          {base && revealed && !reduced ? (
+            <TextScramble as="span" duration={1.1} speed={0.035} characterSet="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789·">
+              EXOPLANÈTE · SYSTÈME ALPHA CENTAURI
+            </TextScramble>
+          ) : (
+            'EXOPLANÈTE · SYSTÈME ALPHA CENTAURI'
+          )}
         </p>
-      )}
 
-      <div className={cn('flex max-w-[34rem] flex-col gap-1.5', !base && 'invisible')} data-hero-part="subtitle">
         {base ? (
-          <>
-            <RevealText per="word" preset="blur" trigger={revealed} delay={0.9} className="text-[clamp(1rem,1.5vw,1.35rem)] leading-snug text-text/90">
-              La planète la plus proche du Système solaire.
+          <h1 id="hero-title" className={TITLE_CLASS} data-hero-part="title">
+            {/* « Proxima » est dessiné par le calque en mix-blend-mode ; ici, il reste lisible par les lecteurs d'écran. */}
+            <span className="opacity-0">Proxima</span>{' '}
+            <RevealText
+              as="span"
+              per="word"
+              preset="scale"
+              trigger={revealed}
+              delay={0.55}
+              className="editorial inline-block text-[1.12em] leading-none"
+              effectClassName="text-gradient-dwarf pr-[0.06em]"
+              reducedClassName="text-gradient-dwarf"
+            >
+              b.
             </RevealText>
-            <p className="text-[clamp(1rem,1.5vw,1.35rem)] leading-snug text-muted">
-              Un monde <em className="editorial text-[1.2em] not-italic text-glow">inconnu</em>.
-            </p>
-          </>
+          </h1>
         ) : (
-          <p className="text-[clamp(1rem,1.5vw,1.35rem)] leading-snug">
-            La planète la plus proche du Système solaire.
-            <br />
-            Un monde inconnu.
+          <p aria-hidden="true" className={TITLE_CLASS} data-hero-part="title">
+            <RevealText as="span" per="char" preset="fade-in-blur" trigger={revealed} className="inline-block text-text" speedReveal={0.9}>
+              Proxima
+            </RevealText>{' '}
+            <span className="editorial invisible inline-block text-[1.12em] leading-none">b.</span>
           </p>
         )}
+
+        <div className={cn('flex max-w-[34rem] flex-col gap-1.5', hide)} data-hero-part="subtitle">
+          {base ? (
+            <RevealText per="word" preset="blur" trigger={revealed} delay={0.9} className={cn(BODY_CLASS, 'text-text/90')}>
+              La planète la plus proche du Système solaire.
+            </RevealText>
+          ) : (
+            <p className={BODY_CLASS}>La planète la plus proche du Système solaire.</p>
+          )}
+          <p className={cn(BODY_CLASS, 'text-muted')}>
+            Un monde <em className="editorial text-[1.2em] not-italic text-glow">inconnu</em>.
+          </p>
+        </div>
+
+        <div className={cn('flex flex-wrap items-center gap-3 pt-1 sm:gap-4', hide)} data-hero-part="actions">
+          <HeroActions interactive={base} />
+        </div>
       </div>
 
-      <div className={cn('flex flex-wrap items-center gap-4 pt-2', !base && 'invisible')} data-hero-part="actions">
-        <HeroActions interactive={base} />
+      <div className={cn('flex shrink-0 items-end justify-between gap-6 pt-4', hide)}>
+        <p className="label max-w-[16rem] text-[10px] text-muted" data-hero-part="coords">
+          RA 14h 29m 43s · DEC −62° 40′ 46″
+        </p>
+        <div data-hero-part="cue" className="hidden min-[900px]:block">
+          {base ? <ScrollCue /> : <div className="h-24 w-24" />}
+        </div>
       </div>
     </div>
   )
@@ -121,7 +131,7 @@ function HeroActions({ interactive }: { interactive: boolean }) {
           type="button"
           tabIndex={tab}
           onClick={() => scrollToTarget('#a-venir')}
-          className="inline-flex h-12 items-center rounded-full border border-line bg-white/[0.03] px-6 text-[13px] font-medium tracking-[-0.01em] text-text/85 backdrop-blur-sm transition-colors duration-300 hover:border-glow/40 hover:text-text"
+          className="inline-flex h-12 items-center rounded-full border border-line bg-void/60 px-6 text-[13px] font-medium tracking-[-0.01em] text-text/85 backdrop-blur-sm transition-colors duration-300 hover:border-glow/40 hover:text-text"
         >
           Les données
         </button>
@@ -154,13 +164,11 @@ function ScrollCue() {
 }
 
 export function Hero() {
-  const root = useRef<HTMLDivElement>(null)
-
   // Au scroll : le texte se dissout pendant que la caméra s'approche de la planète.
   useEffect(() => {
     const section = document.getElementById('hero')
     if (!section) return
-    const parts = () => Array.from(section.querySelectorAll<HTMLElement>('[data-hero-part]:not([data-hero-part="column"])'))
+    const parts = () => Array.from(section.querySelectorAll<HTMLElement>('[data-hero-part]'))
     const trigger = ScrollTrigger.create({
       trigger: section,
       start: 'top top',
@@ -203,21 +211,13 @@ export function Hero() {
         </div>
       }
     >
-      <div ref={root} className="h-full">
-        {/* Calque 10 (fonds Aceternity) et 20 (images en parallaxe) : à venir. */}
-        <div aria-hidden="true" className="absolute inset-0 z-10" />
-        <div aria-hidden="true" className="absolute inset-0 z-20" />
-        <div className="relative z-30 h-full">
-          <HeroColumn mode="base" />
-          <div className="gutter absolute inset-x-0 bottom-[calc(150px+env(safe-area-inset-bottom,0px))] flex items-end justify-between gap-6 min-[900px]:bottom-[120px]">
-            <p className="label max-w-[16rem] text-[10px] text-muted" data-hero-part="coords">
-              RA 14h 29m 43s · DEC −62° 40′ 46″
-            </p>
-            <div data-hero-part="cue" className="hidden min-[900px]:block">
-              <ScrollCue />
-            </div>
-          </div>
-        </div>
+      {/* Calque 10 : fonds animés. Calque 20 : images en parallaxe. Calque 30 : contenu. */}
+      <div aria-hidden="true" className="absolute inset-0 z-10" />
+      <div className="absolute inset-0 z-20" data-layer="media">
+        <HeroImages />
+      </div>
+      <div className="relative z-30 h-full">
+        <HeroColumn mode="base" />
       </div>
     </Sheet>
   )

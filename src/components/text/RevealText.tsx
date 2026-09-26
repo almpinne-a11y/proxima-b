@@ -22,6 +22,32 @@ type RevealTextProps = {
   trigger?: boolean
 }
 
+/** Même découpage que TextEffect (mots inline-block avec leur espace) : lignes identiques. */
+function StaticSegments({ text, per }: { text: string; per: PerType }) {
+  if (per === 'line') {
+    return text.split('\n').map((line, i) => (
+      <span key={i} className="block">
+        {line}
+      </span>
+    ))
+  }
+  return (text.match(/\S+\s*|\s+/g) ?? []).map((segment, i) =>
+    per === 'char' ? (
+      <span key={i} className="inline-block whitespace-pre">
+        {segment.split('').map((char, j) => (
+          <span key={j} className="inline-block whitespace-pre">
+            {char}
+          </span>
+        ))}
+      </span>
+    ) : (
+      <span key={i} className="inline-block whitespace-pre">
+        {segment}
+      </span>
+    ),
+  )
+}
+
 /**
  * Enveloppe de TextEffect (Motion Primitives) :
  * - ne déclenche l'effet qu'à l'entrée dans le viewport (once, marge -15 %) ;
@@ -64,10 +90,11 @@ export function RevealText({
 
   return (
     <Tag ref={ref} id={id} className={cn('relative', className)}>
-      {/* Réserve la place ; lisible par les lecteurs d'écran jusqu'au déclenchement. */}
-      <span aria-hidden={started || undefined} className={cn('block opacity-0', per === 'line' && 'whitespace-pre-line')}>
-        {children}
+      {/* Réserve la place avec le même découpage que l'animation. */}
+      <span aria-hidden="true" className="block opacity-0">
+        <StaticSegments text={children} per={per} />
       </span>
+      {!started && <span className="sr-only">{children}</span>}
       <TextEffect
         as="span"
         per={per}

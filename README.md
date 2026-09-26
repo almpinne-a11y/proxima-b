@@ -17,15 +17,33 @@ npm run preview    # sert le build de production
 npm run lint       # oxlint
 ```
 
-Contrôle d'une page (erreurs console, layout shift, captures desktop et mobile) :
+Contrôle d'une page (erreurs console, layout shift avec les éléments en cause, captures desktop et mobile) :
 
 ```bash
-npx tsx scripts/check.ts http://localhost:5173/ test-results
+npm run check -- http://localhost:5173/ test-results
 ```
 
 Dans un navigateur sans GPU (WebGL logiciel), ajouter `?timeout=200000` à l'URL : le calcul des textures
 procédurales y prend une minute au lieu d'une seconde, et le délai de repli normal est de 8 s.
 Autres paramètres de test : `?quality=eco`, `?motion=reduced`.
+
+## Images (Wikimedia Commons)
+
+Les images viennent de Wikimedia Commons, sous licence libre uniquement (CC BY, CC BY-SA, CC0, domaine public).
+Licence, crédit et page source sont relus par l'API de Commons : rien n'est recopié à la main.
+
+```bash
+npm run images:discover   # parcourt les catégories de scripts/images/sources.ts,
+                          # écrit .cache/images/candidates.json et des planches contact numérotées
+# → choisir les images dans scripts/images/selection.ts (titre Commons exact, alt et légende en français)
+npm run images:build      # télécharge, vérifie la licence, génère AVIF + WebP 640/1280/2560,
+                          # le placeholder flouté et src/data/images.ts
+```
+
+L'emplacement de chaque image dans les sections est défini dans `src/data/placement.ts`.
+Une image absente n'est simplement pas affichée. Les vues d'artiste sont légendées « Vue d'artiste ».
+
+Ces scripts ont besoin d'accéder à `commons.wikimedia.org` et `upload.wikimedia.org`.
 
 ## Installer un composant
 
@@ -53,5 +71,5 @@ scripts/        installation de composants, contrôle Playwright
 ## État
 
 Aperçu v0.1 : socle, scène 3D, loader, hero et section « La distance ».
-Les autres sections attendent l'accès réseau à `ui.aceternity.com` et aux banques d'images
-(ESO, ESA/Hubble, ESA/Webb, NASA, Unsplash).
+Emplacements d'images prêts (hero, sections à venir, bandeau « PROXIMA », crédits), en attente des fichiers.
+Les autres sections attendent l'accès réseau à `ui.aceternity.com`, et les images l'accès à Wikimedia Commons.

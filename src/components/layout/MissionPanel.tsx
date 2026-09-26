@@ -1,5 +1,6 @@
 import { BookOpen, Gauge, Waves } from 'lucide-react'
 import ToolbarExpandable from '@/components/ui/toolbar-expandable'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { useReducedMotion, useSite } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -31,6 +32,7 @@ export function MissionPanel() {
   const setQuality = useSite((s) => s.setQuality)
   const reduced = useReducedMotion()
   const setOverride = useSite((s) => s.setReducedMotionOverride)
+  const small = useMediaQuery('(max-width: 899px)')
 
   const items = [
     {
@@ -96,9 +98,12 @@ export function MissionPanel() {
   return (
     <aside
       aria-label="Panneau Mission"
-      className="fixed right-[max(16px,env(safe-area-inset-right,0px))] bottom-[calc(env(safe-area-inset-bottom,0px)+88px)] z-50 min-[900px]:bottom-[calc(env(safe-area-inset-bottom,0px)+18px)]"
+      className={cn(
+        'fixed right-[max(16px,env(safe-area-inset-right,0px))] z-50',
+        small ? 'top-[calc(env(safe-area-inset-top,0px)+6px)]' : 'bottom-[calc(env(safe-area-inset-bottom,0px)+18px)]',
+      )}
     >
-      <ToolbarExpandable items={items} minPanelWidth={280} />
+      <ToolbarExpandable items={items} minPanelWidth={small ? 260 : 280} direction={small ? 'down' : 'up'} />
     </aside>
   )
 }

@@ -5,6 +5,7 @@ import { MissionPanel } from '@/components/layout/MissionPanel'
 import { Navbar } from '@/components/layout/Navbar'
 import { ScrollProgressBar } from '@/components/layout/ScrollProgressBar'
 import { SignalLoader } from '@/components/loader/SignalLoader'
+import { SvgFilters } from '@/components/media/SvgFilters'
 import { useSite } from '@/lib/store'
 import { hasWebGL } from '@/lib/webgl'
 import { Preferences } from '@/providers/Preferences'
@@ -29,6 +30,7 @@ export default function App() {
   return (
     <SmoothScroll>
       <Preferences />
+      <SvgFilters />
       <a
         href="#contenu"
         className="label fixed left-4 top-4 z-[90] -translate-y-24 rounded-full bg-text px-4 py-2 text-[10px] text-void focus:translate-y-0"
