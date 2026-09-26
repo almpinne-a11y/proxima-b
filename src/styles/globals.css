@@ -1,0 +1,220 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./fonts.css";
+
+/* ------------------------------------------------------------------
+   Palette « signal reçu d'un autre système stellaire »
+   Site volontairement sombre uniquement (direction artistique).
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: dark;
+
+  --void: #05030a;
+  --deep: #0d0814;
+  --dwarf: #ff4d2e;
+  --ember: #ff8a3d;
+  --glow: #ffb38a;
+  --night: #5fc8ff;
+  --text: #f2ede6;
+  --muted: rgba(242, 237, 230, 0.5);
+  --line: rgba(255, 255, 255, 0.08);
+
+  /* Calques (voir docs/PROPOSITION.md) */
+  --z-webgl: 0;
+  --z-bg: 10;
+  --z-media: 20;
+  --z-content: 30;
+  --z-ambient: 40;
+  --z-ui: 50;
+  --z-cursor: 60;
+  --z-modal: 70;
+  --z-loader: 80;
+
+  --ease-signal: cubic-bezier(0.22, 1, 0.36, 1);
+  --gutter: clamp(20px, 6vw, 120px);
+
+  /* Variables shadcn/ui, alignées sur la palette */
+  --background: var(--void);
+  --foreground: var(--text);
+  --card: var(--deep);
+  --card-foreground: var(--text);
+  --popover: var(--deep);
+  --popover-foreground: var(--text);
+  --primary: var(--dwarf);
+  --primary-foreground: var(--void);
+  --secondary: var(--deep);
+  --secondary-foreground: var(--text);
+  --muted-foreground: var(--muted);
+  --accent: var(--ember);
+  --accent-foreground: var(--void);
+  --destructive: var(--dwarf);
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--glow);
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-void: var(--void);
+  --color-deep: var(--deep);
+  --color-dwarf: var(--dwarf);
+  --color-ember: var(--ember);
+  --color-glow: var(--glow);
+  --color-night: var(--night);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --font-display: "Unbounded Variable", "Unbounded", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-display);
+
+  --ease-signal: var(--ease-signal);
+}
+
+@layer base {
+  html {
+    background: var(--void);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--dwarf);
+    color: var(--void);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--glow);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* Lenis */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+  }
+  .lenis [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+}
+
+@layer components {
+  /* Titres : Unbounded très grand, serré */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.92;
+  }
+
+  /* Accent éditorial : Instrument Serif italique */
+  .editorial {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  /* Données et labels : JetBrains Mono en capitales */
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.5;
+  }
+
+  .text-gradient-dwarf {
+    background-image: linear-gradient(115deg, var(--glow) 10%, var(--ember) 45%, var(--dwarf) 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gutter {
+    padding-inline: var(--gutter);
+  }
+
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+}
+
+/* Grain animé : tuile de bruit décalée par à-coups (très peu coûteux). */
+@keyframes grain-shift {
+  0% { transform: translate3d(0, 0, 0); }
+  12% { transform: translate3d(-8%, 6%, 0); }
+  25% { transform: translate3d(5%, -9%, 0); }
+  37% { transform: translate3d(-3%, 12%, 0); }
+  50% { transform: translate3d(9%, 3%, 0); }
+  62% { transform: translate3d(-11%, -4%, 0); }
+  75% { transform: translate3d(4%, 8%, 0); }
+  87% { transform: translate3d(-6%, -10%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Curseur custom actif : on masque le curseur natif partout (desktop uniquement). */
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
