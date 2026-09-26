@@ -48,9 +48,29 @@ const stripHtml = (html = '') =>
     .replace(/\s+/g, ' ')
     .trim()
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+let lastRequest = 0
+
+/**
+ * Requête polie envers Wikimedia : au moins 1,2 s entre deux appels, et nouvel essai
+ * (délai Retry-After, sinon attente exponentielle) sur 429 « trop de requêtes » ou erreur serveur.
+ */
+async function politeFetch(url: string, timeout: number) {
+  for (let attempt = 0; attempt < 7; attempt++) {
+    const wait = lastRequest + 1200 - Date.now()
+    if (wait > 0) await sleep(wait)
+    lastRequest = Date.now()
+    const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(timeout) })
+    if (res.status !== 429 && res.status < 500) return res
+    const retryAfter = Number(res.headers.get('retry-after'))
+    await sleep(retryAfter > 0 ? retryAfter * 1000 : 3000 * 2 ** attempt)
+  }
+  throw new Error(`Wikimedia refuse encore après plusieurs essais : ${new URL(url).hostname}`)
+}
+
 async function api(params: Record<string, string>) {
   const url = `${API}?${new URLSearchParams({ format: 'json', formatversion: '2', origin: '*', ...params })}`
-  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(30000) })
+  const res = await politeFetch(url, 30000)
   if (!res.ok) throw new Error(`Commons a répondu ${res.status}`)
   return (await res.json()) as { query?: { pages?: QueryPage[] }; continue?: Record<string, string> }
 }
@@ -75,7 +95,8 @@ function toFile(page: QueryPage): CommonsFile | null {
     height: info.height,
     mime: info.mime,
     downloadUrl,
-    thumbUrl: info.thumburl ? info.thumburl.replace(/\/\d+px-/, '/360px-') : info.url,
+    // Wikimedia n'accepte que des largeurs de vignette standard (330, 500, 960…).
+    thumbUrl: info.thumburl ? info.thumburl.replace(/\/\d+px-/, '/330px-') : info.url,
     license: stripHtml(value('LicenseShortName')),
     licenseUrl: stripHtml(value('LicenseUrl')),
     credit: stripHtml(value('Credit')),
@@ -125,7 +146,7 @@ export async function filesByTitle(titles: string[]): Promise<{ files: CommonsFi
 }
 
 export async function download(url: string) {
-  const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(120000) })
+  const res = await politeFetch(url, 120000)
   if (!res.ok) throw new Error(`Téléchargement ${res.status} : ${url}`)
   return Buffer.from(await res.arrayBuffer())
 }

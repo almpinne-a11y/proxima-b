@@ -6,19 +6,19 @@ import type { SectionId } from '@/lib/store'
  */
 export const HERO_IMAGES = [
   { id: 'proxima-b-surface', depth: 'far' },
-  { id: 'proxima-hubble', depth: 'near' },
+  { id: 'alpha-centauri-paranal', depth: 'near' },
 ] as const
 
 export const SECTION_IMAGES: Partial<Record<SectionId, string>> = {
   donnees: 'proxima-b-orbit',
   hubble: 'proxima-hubble',
-  'jour-nuit': 'proxima-b-surface',
-  etoile: 'proxima-flare',
-  habitable: 'proxima-b-ocean',
-  decouverte: 'la-silla',
-  voyage: 'voyager',
-  archives: 'alpha-centauri',
+  'jour-nuit': 'proxima-b-sunset',
+  etoile: 'proxima-dust-belts',
+  habitable: 'proxima-b-render',
+  decouverte: 'la-silla-night',
+  voyage: 'voyager-1',
+  archives: 'alpha-centauri-vlt',
   message: 'pale-blue-dot',
 }
 
-export const WORDMARK_IMAGE = 'milky-way'
+export const WORDMARK_IMAGE = 'la-silla-panorama'

@@ -27,7 +27,8 @@ const entries: string[] = []
 for (const item of SELECTION) {
   const file = byTitle.get(item.commons.replace(/_/g, ' '))
   if (!file) continue
-  if (!isUsable(file, 640)) {
+  // 500 px minimum : certaines photos de référence (Hubble) n'existent sur Commons qu'en petit format.
+  if (!isUsable(file, 500)) {
     console.log(`✗ ${item.id} : licence ou format refusé (${file.license}, ${file.mime})`)
     continue
   }
