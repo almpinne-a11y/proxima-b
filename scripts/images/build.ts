@@ -10,7 +10,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import sharp from 'sharp'
-import { download, filesByTitle, isUsable } from './commons'
+import { downloadBest, filesByTitle, isUsable } from './commons'
 import { SELECTION } from './selection'
 
 const ROOT = path.resolve(import.meta.dirname, '../..')
@@ -32,8 +32,15 @@ for (const item of SELECTION) {
     console.log(`✗ ${item.id} : licence ou format refusé (${file.license}, ${file.mime})`)
     continue
   }
-  const original = path.join(ORIGINALS, `${item.id}${path.extname(new URL(file.downloadUrl).pathname) || '.jpg'}`)
-  if (!existsSync(original)) writeFileSync(original, await download(file.downloadUrl))
+  const original = path.join(ORIGINALS, `${item.id}${path.extname(new URL(file.originalUrl).pathname) || '.jpg'}`)
+  if (!existsSync(original)) {
+    try {
+      writeFileSync(original, await downloadBest(file))
+    } catch (error) {
+      console.log(`✗ ${item.id} : ${(error as Error).message}`)
+      continue
+    }
+  }
   const input = readFileSync(original)
   const meta = await sharp(input).rotate().metadata()
   const width = meta.autoOrient?.width ?? meta.width ?? 0

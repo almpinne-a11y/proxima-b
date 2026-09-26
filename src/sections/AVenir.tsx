@@ -26,7 +26,7 @@ export function AVenir() {
       </div>
       {wordmark && (
         <div aria-hidden="true" className="relative z-20 overflow-hidden pb-6">
-          <ImageFilledText image={wordmark} className="display block text-center text-[23vw] leading-[0.8] tracking-[-0.06em]">
+          <ImageFilledText image={wordmark} className="display block whitespace-nowrap text-center text-[16.5vw] leading-[0.82] tracking-[-0.05em]">
             PROXIMA
           </ImageFilledText>
         </div>

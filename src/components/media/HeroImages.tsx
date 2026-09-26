@@ -36,8 +36,13 @@ export function HeroImages() {
         const depth = SLOTS[item.depth].depth
         const tx = (reduced ? 0 : pointerState.x * 24 * depth) + spread * 160 * depth
         const ty = (reduced ? 0 : -pointerState.y * 16 * depth) - spread * 70 * (1 - depth)
-        current[i].x += (tx - current[i].x) * 0.08
-        current[i].y += (ty - current[i].y) * 0.08
+        const dx = tx - current[i].x
+        const dy = ty - current[i].y
+        // Arrivé (à 0,05 px près) : plus aucune écriture dans le DOM.
+        if (Math.abs(dx) < 0.05 && Math.abs(dy) < 0.05 && el.dataset.spread === spread.toFixed(3)) return
+        current[i].x += dx * 0.08
+        current[i].y += dy * 0.08
+        el.dataset.spread = spread.toFixed(3)
         el.style.transform = `translate3d(${current[i].x.toFixed(2)}px, ${current[i].y.toFixed(2)}px, 0)`
         el.style.opacity = String(1 - Math.min(1, spread * 1.3))
       })

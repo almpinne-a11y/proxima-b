@@ -37,11 +37,11 @@ export const SELECTION: Selected[] = [
     artistImpression: true,
   },
   {
-    id: 'proxima-b-orbit',
-    commons: 'File:Proxima Centauri and its planet compared to the Solar System fr.jpg',
+    id: 'angular-size',
+    commons: 'File:Angular apparent size comparison (eso1629k).jpg',
     category: 'proxima-b',
-    alt: 'Schéma comparant l’orbite de Proxima b à celles de Mercure et de la Terre',
-    caption: 'L’orbite de Proxima b comparée au Système solaire : la planète tourne environ vingt fois plus près de son étoile que la Terre du Soleil.',
+    alt: 'Deux disques comparés : le Soleil vu depuis la Terre et Proxima Centauri, plus grande, vue depuis Proxima b',
+    caption: 'Proxima Centauri vue depuis Proxima b, comparée au Soleil vu depuis la Terre : l’étoile est bien plus petite, mais la planète en est très proche.',
   },
   {
     id: 'proxima-b-render',
@@ -86,8 +86,8 @@ export const SELECTION: Selected[] = [
     id: 'alpha-centauri-vlt',
     commons: 'File:Alpha Centauri through the VLT (2016-04-04-paranal-vlt-alfacentauri-cc).jpg',
     category: 'alpha-centauri',
-    alt: 'Télescopes du VLT sous un ciel étoilé où brille Alpha Centauri',
-    caption: 'Alpha Centauri au-dessus des télescopes du VLT, à Paranal.',
+    alt: 'Structure d’un télescope du VLT à travers laquelle brille une étoile d’Alpha Centauri',
+    caption: 'Une étoile d’Alpha Centauri aperçue à travers la structure d’un des télescopes du VLT, à Paranal.',
   },
   {
     id: 'la-silla-night',
@@ -100,8 +100,8 @@ export const SELECTION: Selected[] = [
     id: 'la-silla-panorama',
     commons: 'File:A glorious display at La Silla (2016-04-11-la-silla-cc).jpg',
     category: 'telescopes',
-    alt: 'Panorama de la Voie lactée au-dessus des télescopes de La Silla',
-    caption: 'La Voie lactée au-dessus de l’observatoire de La Silla, au Chili.',
+    alt: 'Coucher de soleil flamboyant sur une mer de nuages, vu depuis La Silla',
+    caption: 'Coucher de soleil sur la mer de nuages, depuis l’observatoire de La Silla dans le désert d’Atacama, au Chili.',
   },
   {
     id: 'espresso',

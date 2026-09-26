@@ -6,11 +6,11 @@ import type { SectionId } from '@/lib/store'
  */
 export const HERO_IMAGES = [
   { id: 'proxima-b-surface', depth: 'far' },
-  { id: 'alpha-centauri-paranal', depth: 'near' },
+  { id: 'proxima-hubble', depth: 'near' },
 ] as const
 
 export const SECTION_IMAGES: Partial<Record<SectionId, string>> = {
-  donnees: 'proxima-b-orbit',
+  donnees: 'angular-size',
   hubble: 'proxima-hubble',
   'jour-nuit': 'proxima-b-sunset',
   etoile: 'proxima-dust-belts',

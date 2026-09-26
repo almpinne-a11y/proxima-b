@@ -1,6 +1,7 @@
 /**
  * Accès à l'API de Wikimedia Commons : métadonnées, licence et crédit exacts de chaque fichier.
- * Aucune URL n'est devinée : tout vient de l'API (imageinfo + extmetadata).
+ * Les URL viennent de l'API (imageinfo + extmetadata) ; les vignettes de repli sont dérivées de l'URL
+ * canonique de l'original selon le schéma documenté de Wikimedia (…/thumb/…/<largeur>px-<nom>).
  */
 
 export const USER_AGENT = 'ProximaBSite/0.1 (https://github.com/almpinne-a11y/proxima-b)'
@@ -15,8 +16,10 @@ export type CommonsFile = {
   width: number
   height: number
   mime: string
-  /** Rendu redimensionné par Commons (≤ 2560 px de large). */
+  /** Rendu redimensionné par Commons (ou l'original s'il est plus petit). */
   downloadUrl: string
+  /** Fichier original. */
+  originalUrl: string
   thumbUrl: string
   license: string
   licenseUrl: string
@@ -55,15 +58,16 @@ let lastRequest = 0
  * Requête polie envers Wikimedia : au moins 1,2 s entre deux appels, et nouvel essai
  * (délai Retry-After, sinon attente exponentielle) sur 429 « trop de requêtes » ou erreur serveur.
  */
-async function politeFetch(url: string, timeout: number) {
-  for (let attempt = 0; attempt < 7; attempt++) {
+async function politeFetch(url: string, timeout: number, attempts = 7) {
+  for (let attempt = 0; attempt < attempts; attempt++) {
     const wait = lastRequest + 1200 - Date.now()
     if (wait > 0) await sleep(wait)
     lastRequest = Date.now()
     const res = await fetch(url, { headers: { 'User-Agent': USER_AGENT }, signal: AbortSignal.timeout(timeout) })
     if (res.status !== 429 && res.status < 500) return res
     const retryAfter = Number(res.headers.get('retry-after'))
-    await sleep(retryAfter > 0 ? retryAfter * 1000 : 3000 * 2 ** attempt)
+    // Attente plafonnée à 30 s : sur les gros originaux, Wikimedia peut demander plusieurs minutes.
+    await sleep(Math.min(30000, retryAfter > 0 ? retryAfter * 1000 : 3000 * 2 ** attempt))
   }
   throw new Error(`Wikimedia refuse encore après plusieurs essais : ${new URL(url).hostname}`)
 }
@@ -95,6 +99,7 @@ function toFile(page: QueryPage): CommonsFile | null {
     height: info.height,
     mime: info.mime,
     downloadUrl,
+    originalUrl: info.url,
     // Wikimedia n'accepte que des largeurs de vignette standard (330, 500, 960…).
     thumbUrl: info.thumburl ? info.thumburl.replace(/\/\d+px-/, '/330px-') : info.url,
     license: stripHtml(value('LicenseShortName')),
@@ -110,7 +115,7 @@ function toFile(page: QueryPage): CommonsFile | null {
 export function isUsable(file: CommonsFile, minWidth = 1400) {
   return (
     ALLOWED_LICENSE.test(file.license) &&
-    /^image\/(jpeg|png|tiff|webp)$/.test(file.mime) &&
+    /^image\/(jpeg|png|webp)$/.test(file.mime) &&
     file.width >= minWidth &&
     !/trademark|insignia|personality/i.test(file.restrictions)
   )
@@ -145,8 +150,38 @@ export async function filesByTitle(titles: string[]): Promise<{ files: CommonsFi
   return { files, missing }
 }
 
-export async function download(url: string) {
-  const res = await politeFetch(url, 120000)
+export async function download(url: string, attempts = 7) {
+  const res = await politeFetch(url, 120000, attempts)
   if (!res.ok) throw new Error(`Téléchargement ${res.status} : ${url}`)
   return Buffer.from(await res.arrayBuffer())
+}
+
+/** Vignette standard (largeurs autorisées : 330, 500, 960, 1280, 1920, 3840…) servie par thumb.wikimedia.org. */
+export function thumbFor(originalUrl: string, width: number) {
+  const parts = new URL(originalUrl).pathname.split('/') // /wikipedia/commons/a/ab/Nom.jpg
+  const name = parts[parts.length - 1]
+  parts.splice(3, 0, 'thumb')
+  return `https://thumb.wikimedia.org${parts.join('/')}/${width}px-${name}`
+}
+
+/**
+ * Télécharge la meilleure version disponible : vignette haute définition, puis 1920 et 1280 px,
+ * puis l'original en dernier recours (upload.wikimedia.org limite fortement les originaux volumineux).
+ */
+export async function downloadBest(file: CommonsFile) {
+  // Vignettes de thumb.wikimedia.org d'abord (pas de limite stricte), l'original en dernier.
+  const scaled = new URL(file.downloadUrl).hostname === 'thumb.wikimedia.org' ? [file.downloadUrl] : []
+  const urls = [
+    ...scaled,
+    ...[1920, 1280].filter((w) => file.width > w).map((w) => thumbFor(file.originalUrl, w)),
+    file.originalUrl,
+  ]
+  for (const url of urls) {
+    try {
+      return await download(url, 2)
+    } catch {
+      // version suivante
+    }
+  }
+  throw new Error(`aucune version téléchargeable pour ${file.title}`)
 }
