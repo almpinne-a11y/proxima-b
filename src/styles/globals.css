@@ -213,8 +213,8 @@
   }
 }
 
-/* Curseur custom actif : on masque le curseur natif partout (desktop uniquement). */
-html.has-custom-cursor,
-html.has-custom-cursor * {
-  cursor: none !important;
+/* Curseur natif : main sur tout ce qui est cliquable (Tailwind v4 laisse les boutons en flèche). */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
 }

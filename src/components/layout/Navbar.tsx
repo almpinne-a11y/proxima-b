@@ -44,7 +44,6 @@ export function Navbar() {
               scrollToTarget(0)
             }}
             className="flex items-baseline gap-1 text-[15px] font-semibold tracking-[-0.04em] text-text"
-            data-cursor="Accueil"
           >
             Proxima<span className="editorial text-gradient-dwarf text-[19px]">b.</span>
           </a>

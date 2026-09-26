@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { AmbientOverlays } from '@/components/layout/AmbientOverlays'
-import { CustomCursor } from '@/components/layout/CustomCursor'
 import { DockNav } from '@/components/layout/DockNav'
 import { MissionPanel } from '@/components/layout/MissionPanel'
 import { Navbar } from '@/components/layout/Navbar'
@@ -47,7 +46,6 @@ export default function App() {
       </main>
       <DockNav />
       <MissionPanel />
-      <CustomCursor />
       <SignalLoader />
     </SmoothScroll>
   )

@@ -106,7 +106,6 @@ export default function ToolbarExpandable({
                 aria-label={item.label}
                 aria-expanded={active === item.id}
                 aria-controls={`toolbar-panel-${item.id}`}
-                data-cursor={item.label}
                 className={cn(
                   'relative flex h-9 w-9 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg text-muted transition-colors hover:bg-white/5 hover:text-text active:scale-[0.98]',
                   active === item.id ? 'bg-white/8 text-glow' : ''

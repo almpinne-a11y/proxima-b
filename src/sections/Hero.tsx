@@ -106,7 +106,6 @@ function HeroActions({ interactive }: { interactive: boolean }) {
           <button
             type="button"
             tabIndex={tab}
-            data-cursor="Explorer"
             onClick={() => scrollToTarget('#distance')}
             className="group relative inline-flex h-12 items-center gap-3 rounded-full border border-dwarf/40 bg-void/90 pl-6 pr-2 text-[13px] font-medium tracking-[-0.01em] text-text"
           >
@@ -121,7 +120,6 @@ function HeroActions({ interactive }: { interactive: boolean }) {
         <button
           type="button"
           tabIndex={tab}
-          data-cursor="Ouvrir"
           onClick={() => scrollToTarget('#a-venir')}
           className="inline-flex h-12 items-center rounded-full border border-line bg-white/[0.03] px-6 text-[13px] font-medium tracking-[-0.01em] text-text/85 backdrop-blur-sm transition-colors duration-300 hover:border-glow/40 hover:text-text"
         >
@@ -138,7 +136,6 @@ function ScrollCue() {
     <button
       type="button"
       onClick={() => scrollToTarget('#distance')}
-      data-cursor="Défiler"
       aria-label="Défiler vers la section suivante"
       className="relative flex h-24 w-24 items-center justify-center rounded-full"
     >
