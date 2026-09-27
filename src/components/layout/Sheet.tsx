@@ -140,11 +140,13 @@ export function Sheet({
   return (
     <SheetContext.Provider value={{ id, wrapper, scrollLength }}>
       <section id={id} ref={wrapper} aria-labelledby={labelledBy} className="relative" style={style}>
-        {index > 0 && (
+        {index > 0 && veil > 0 && (
+          // Ombre portée sur la feuille précédente : elle finit exactement à l'opacité du haut du voile,
+          // pour que le bord de la feuille ne forme ni ligne ni marche.
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 -top-[30vh] h-[30vh]"
-            style={{ background: 'linear-gradient(to bottom, transparent, rgba(5, 3, 10, 0.55))' }}
+            style={{ background: `linear-gradient(to bottom, transparent, rgba(5, 3, 10, ${veil * 0.55}))` }}
           />
         )}
         <div
@@ -156,7 +158,6 @@ export function Sheet({
               className="pointer-events-none absolute inset-0"
               style={{
                 background: `linear-gradient(to bottom, rgba(5, 3, 10, ${veil * 0.55}) 0, rgba(5, 3, 10, ${veil}) 24vh)`,
-                boxShadow: 'inset 0 1px 0 rgba(255, 179, 138, 0.14)',
               }}
             />
           )}
