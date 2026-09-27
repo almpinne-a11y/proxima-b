@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { AmbientOverlays } from '@/components/layout/AmbientOverlays'
-import { DockNav } from '@/components/layout/DockNav'
 import { MissionPanel } from '@/components/layout/MissionPanel'
 import { Navbar } from '@/components/layout/Navbar'
 import { ScrollProgressBar } from '@/components/layout/ScrollProgressBar'
@@ -46,7 +45,6 @@ export default function App() {
         <Distance />
         <AVenir />
       </main>
-      <DockNav />
       <MissionPanel />
       <SignalLoader />
     </SmoothScroll>
