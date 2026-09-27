@@ -27,6 +27,14 @@ Dans un navigateur sans GPU (WebGL logiciel), ajouter `?timeout=200000` à l'URL
 procédurales y prend une minute au lieu d'une seconde, et le délai de repli normal est de 8 s.
 Autres paramètres de test : `?quality=eco`, `?motion=reduced`.
 
+## Mise en ligne (Netlify)
+
+`netlify.toml` fixe la commande de build (`npm run build`), le dossier publié (`dist`) et la version de Node.
+Sur Netlify : « Add new project » → « Import an existing project » → GitHub → ce dépôt, en choisissant la branche
+à publier. Chaque push sur cette branche redéploie ensuite le site.
+
+Sans passer par GitHub : `npm run build`, puis glisser le dossier `dist/` sur https://app.netlify.com/drop.
+
 ## Images (Wikimedia Commons)
 
 Les images viennent de Wikimedia Commons, sous licence libre uniquement (CC BY, CC BY-SA, CC0, domaine public).
