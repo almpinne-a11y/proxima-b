@@ -49,5 +49,8 @@ export const PREVIEW_END: SectionMeta = {
   built: true,
 }
 
-/** Ancre réelle vers laquelle mène une entrée de navigation dans l'aperçu. */
-export const anchorFor = (section: SectionMeta) => (section.built ? `#${section.id}` : '#a-venir')
+/** Identifiant de la carte d'une section dans « La suite du signal ». */
+export const cardIdFor = (section: SectionMeta) => `a-venir-${section.id}`
+
+/** Destination d'une entrée de navigation : la section si elle est construite, sinon sa propre carte. */
+export const anchorFor = (section: SectionMeta) => (section.built ? `#${section.id}` : `#${cardIdFor(section)}`)

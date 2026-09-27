@@ -3,7 +3,7 @@ import { Lightbox } from '@/components/media/Lightbox'
 import { InView } from '@/components/ui/in-view'
 import { imageById } from '@/data/images'
 import { SECTION_IMAGES } from '@/data/placement'
-import { SECTIONS } from '@/lib/sections'
+import { cardIdFor, SECTIONS } from '@/lib/sections'
 import { useReducedMotion } from '@/lib/store'
 
 /** Sections en construction, chacune illustrée (entrée InView, Motion Primitives). */
@@ -17,7 +17,7 @@ export function UpcomingSections() {
         const Icon = section.icon
         const image = imageById(SECTION_IMAGES[section.id] ?? '')
         return (
-          <li key={section.id} className="bg-void/80">
+          <li key={section.id} id={cardIdFor(section)} className="bg-void/80 focus-visible:-outline-offset-2">
             <InView
               viewOptions={{ once: true, margin: '-10% 0px' }}
               variants={

@@ -3,7 +3,7 @@ import { AnimatedBackground } from '@/components/ui/animated-background'
 import { TextRoll } from '@/components/ui/text-roll'
 import { MagneticArea } from '@/components/site/MagneticArea'
 import { anchorFor, SECTIONS } from '@/lib/sections'
-import { scrollToTarget } from '@/lib/scroll'
+import { goToSection, scrollToTarget } from '@/lib/scroll'
 import { useReducedMotion, useSite } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -34,7 +34,7 @@ export function Navbar() {
   const [rolls, setRolls] = useState<Record<string, number>>({})
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+    <header id="site-header" className="fixed inset-x-0 top-0 z-50" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <nav aria-label="Navigation principale" className="gutter flex h-16 items-center justify-between gap-6">
         <MagneticArea intensity={0.2}>
           <a
@@ -62,7 +62,7 @@ export function Navbar() {
                 href={anchorFor(link)}
                 onClick={(event) => {
                   event.preventDefault()
-                  scrollToTarget(anchorFor(link))
+                  goToSection(link.id)
                 }}
                 onMouseEnter={() => setRolls((r) => ({ ...r, [link.id]: (r[link.id] ?? 0) + 1 }))}
                 className={cn(

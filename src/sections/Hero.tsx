@@ -8,7 +8,7 @@ import { GlowEffect } from '@/components/ui/glow-effect'
 import { SpinningText } from '@/components/ui/spinning-text'
 import { TextScramble } from '@/components/ui/text-scramble'
 import { ScrollTrigger } from '@/lib/gsap'
-import { scrollToTarget } from '@/lib/scroll'
+import { goToSection, scrollToTarget } from '@/lib/scroll'
 import { useReducedMotion, useSite } from '@/lib/store'
 import { cn } from '@/lib/utils'
 
@@ -130,7 +130,7 @@ function HeroActions({ interactive }: { interactive: boolean }) {
         <button
           type="button"
           tabIndex={tab}
-          onClick={() => scrollToTarget('#a-venir')}
+          onClick={() => goToSection('donnees')}
           className="inline-flex h-12 items-center rounded-full border border-line bg-void/60 px-6 text-[13px] font-medium tracking-[-0.01em] text-text/85 backdrop-blur-sm transition-colors duration-300 hover:border-glow/40 hover:text-text"
         >
           Les données
